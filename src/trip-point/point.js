@@ -1,4 +1,5 @@
-import makeTripOffer from './trip-offers-for-point';
+import makeTripOffer from './offers-for-point';
+import info from './info';
 
 export default (text, timeTable, duration, price) => {
   const icons = [{icon: `🏨`, name: `Hotel`,

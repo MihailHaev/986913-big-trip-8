@@ -1,5 +1,5 @@
 import makeFilter from './filter';
-import makeTripPoin from './trip-point';
+import makeTripPoin from './trip-point/point';
 import createArrayOfHTML from './arrayOfHTML';
 import {getRandomElementOfArray, getRandomInt} from './random-values';
 
