@@ -11,10 +11,11 @@ export default (text, timeTable, duration, price) => {
     offers: [[`Upgrade to business`, 20], [`Select meal`, 20]], regexp: /flight/ig}];
   let icon = ``;
   let offers = [];
-  for (let i of icons) {
+  for (const i of icons) {
     if (text.match(i.regexp)) {
       icon = i.icon;
       offers = i.offers;
+      break;
     }
   }
   return `<article class="trip-point">
