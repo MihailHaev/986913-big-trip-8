@@ -50,7 +50,11 @@ export default () => {
     city: getRandomElementOfArray(cities),
     desc: getRandomElementOfArray(arrayOfDesc, getRandomInt(1, 3)).join(`. `),
     time: allTime,
+<<<<<<< HEAD
     imeges: `http://picsum.photos/300/150?r=${Math.random()}`,
+=======
+    imges: `http://picsum.photos/300/150?r=${Math.random()}`,
+>>>>>>> a28a0b58c4099e6d457bd9831037a840a963d20c
     price: getRandomInt(10, 100),
     offers: getRandomElementOfObject(offers, getRandomInt(0, 2)),
     isFavorit: getRandomBoolean(),
