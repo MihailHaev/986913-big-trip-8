@@ -1,5 +1,5 @@
 import makeInfo from './info';
-import makePoint from './point';
+import makePoint from './point-not-class';
 
 export default (length = false) => {
   if (!length) {
