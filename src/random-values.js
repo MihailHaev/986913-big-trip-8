@@ -26,16 +26,17 @@ const getRandomDate = (dayPlus = 1, dayMinus = 1) =>
 
 const getRandomElementOfObject = (obj, count = false) => {
   const newObject = {};
-  let keys = Object.keys(obj);
+  const cloneOfObj = Object.assign({}, obj);
+  let keys = Object.keys(cloneOfObj);
   let randomKey = keys[Math.floor(Math.random() * keys.length)];
   if (count === false) {
-    newObject[randomKey] = obj[randomKey];
+    newObject[randomKey] = cloneOfObj[randomKey];
     return newObject;
   } else {
     for (let i = 0; i < count; i++) {
-      newObject[randomKey] = obj[randomKey];
-      delete obj[randomKey];
-      keys = Object.keys(obj);
+      newObject[randomKey] = cloneOfObj[randomKey];
+      delete cloneOfObj[randomKey];
+      keys = Object.keys(cloneOfObj);
       randomKey = keys[Math.floor(Math.random() * keys.length)];
     }
     return newObject;
