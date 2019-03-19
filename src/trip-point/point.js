@@ -1,15 +1,13 @@
 import makeTripOffer from './offers';
-import makeElement from '../element';
-class Point {
+import Component from '../component';
+class Point extends Component {
   constructor({type, time, price, offers, city}) {
+    super();
     this._type = type;
     this._time = time;
     this._price = price;
     this._offers = offers;
     this._city = city;
-
-    this._state = {};
-    this._element = null;
     this._onEdit = null;
   }
 
@@ -21,10 +19,6 @@ class Point {
     if (typeof fn === `function`) {
       this._onEdit = fn;
     }
-  }
-
-  get element() {
-    return this._element;
   }
 
   _getTitle(city, type) {
@@ -54,17 +48,6 @@ class Point {
 
   unbind() {
     this._element.removeEventListener(`click`, this._onButtonClick.bind(this));
-  }
-
-  render() {
-    this._element = makeElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 }
 

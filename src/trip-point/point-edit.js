@@ -1,11 +1,12 @@
-import makeElement from '../element';
 import makeTravelWays from './travel-ways';
 import makeOffers from './offers-edit';
 import makeDestination from './destination';
 import makeImgies from './imgies';
+import Component from '../component';
 
-class PointEdit {
+class PointEdit extends Component {
   constructor({type, time, price, offers, types, allOffers, cities, city, isFavorit, desc, imgies}) {
+    super();
     this._type = type;
     this._time = time;
     this._price = price;
@@ -17,8 +18,6 @@ class PointEdit {
     this._isFavorit = isFavorit;
     this._desc = desc;
     this._imgies = imgies;
-    this._state = {};
-    this._element = null;
     this._onSubmit = null;
   }
 
@@ -31,10 +30,6 @@ class PointEdit {
     if (typeof fn === `function`) {
       this._onSubmit = fn;
     }
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -93,23 +88,12 @@ class PointEdit {
 
   bind() {
     this._element.querySelector(`article > form`).addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-    this._element.querySelector(`article > from`).addEventListener(`reset`, () => {});
+    this._element.querySelector(`article > form`).addEventListener(`reset`, () => {});
   }
 
   unbind() {
     this._element.querySelector(`article > form`).removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-    this._element.querySelector(`article > from`).removeEventListener(`reset`, () => {});
-  }
-
-  render() {
-    this._element = makeElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
+    this._element.querySelector(`article > form`).removeEventListener(`reset`, () => {});
   }
 }
 
