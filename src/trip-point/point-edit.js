@@ -3,7 +3,8 @@ import makeOffers from './offers-edit';
 import makeDestination from './destination';
 import makeImgies from './imgies';
 import MainPoint from './main-point';
-// import flatpickr from "flatpickr";
+import flatpickr from "flatpickr";
+import moment from 'moment';
 
 class PointEdit extends MainPoint {
   constructor({type, time, price, offers, types, allOffers, cities, city, isFavorit, desc, imgies}) {
@@ -48,8 +49,11 @@ class PointEdit extends MainPoint {
   }
 
   _onChangeTime(evt) {
-    [this._time.timeOfStart, this._time.timeOfEnd] = evt.target.value.split(` — `);
-    this._time.duration = this._findDuration(this._time.timeOfStart, this._time.timeOfEnd);
+    const [timeOfStart, timeOfEnd] = evt.target.value.split(` — `);
+    let [hour, minute] = timeOfStart.split(`:`);
+    this._time.timeOfStart = moment(this._time.timeOfStart).set({hour, minute}).toDate();
+    [hour, minute] = timeOfEnd.split(`:`);
+    this._time.timeOfEnd = moment(this._time.timeOfEnd).set({hour, minute}).toDate();
   }
 
   _onChangePrice(evt) {
@@ -163,7 +167,14 @@ class PointEdit extends MainPoint {
     this._element.querySelector(`input[name="price"]`).addEventListener(`change`, this._onChangePrice);
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`change`, this._onChangeOffer);
     this._element.querySelector(`.paint__favorite-wrap`).addEventListener(`change`, this._onChangeFavorit);
-    // flatpickr(`input[name="time"]`, {enableTime: true, noCalendar: true, altInput: true, altFormat: `H:i — H:i`, dateFormat: `H:i — H:i`});
+    flatpickr(`input[name="time"]`, {enableTime: true,
+      mode: `range`, noCalendar: true,
+      altInput: true, altFormat: `H:i`,
+      dateFormat: `H:i`, defaultDate: [
+        moment(this._time.timeOfStart).format(`H:mm`),
+        moment(this._time.timeOfEnd).format(`H:mm`)],
+      locale: {rangeSeparator: ` — `}
+    });
   }
 
   unbind() {
