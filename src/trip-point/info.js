@@ -15,35 +15,13 @@ const arrayOfDesc = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 const offers = {'Add luggage': getRandomInt(10, 40), 'Switch to comfort class': getRandomInt(10, 40), 'Add meal': getRandomInt(10, 40), 'Choose seats': getRandomInt(10, 40)};
 const cities = new Set([`Moscow`, `Amsterdam`, `Geneva`, `Chamonix`, `Aldento`, `Paris`, `London`, `Milan`]);
 
-const getHoursAndMinutes = (time) => time.toLocaleString(`ru`, {
-  year: `numeric`,
-  month: `long`,
-  day: `numeric`,
-  weekday: `long`,
-  timezone: `UTC`,
-  hour: `numeric`,
-  minute: `numeric`
-}).split(` `)[5];
-
-const makeHoursAndMinutes = (ms) => {
-  const hoursAndMinutes = [];
-  const hours = Math.floor(ms / (3600 * 1000));
-  if (hours > 0) {
-    hoursAndMinutes.push(`${hours}H`);
-    ms -= (hours * 3600 * 1000);
-  }
-  hoursAndMinutes.push(`${Math.ceil(ms / (60 * 1000))}M`);
-  return hoursAndMinutes.join(` `);
-};
-
 export default () => {
   const time = getRandomDate((4 / 24), (1 / 24));
   const duration = getRandomInt((1000 * 60), (1000 * 60 * 60 * 3));
   const timeOfEnd = time + duration;
   const allTime = {
-    timeOfStart: getHoursAndMinutes(new Date(time)),
-    timeOfEnd: getHoursAndMinutes(new Date(timeOfEnd)),
-    duration: makeHoursAndMinutes(duration),
+    timeOfStart: new Date(time),
+    timeOfEnd: new Date(timeOfEnd),
   };
   return {
     type: getRandomElementOfArray(types),

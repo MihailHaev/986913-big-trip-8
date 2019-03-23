@@ -11,16 +11,27 @@ const data = makeData();
 const point = new Point(data);
 const pointEdit = new PointEdit(data);
 
-tripDayConteiner.appendChild(pointEdit.render());
+tripDayConteiner.appendChild(pointEdit.render(tripDayConteiner));
 
 point.onEdit = () => {
-  pointEdit.render();
+  pointEdit.render(tripDayConteiner);
   tripDayConteiner.replaceChild(pointEdit.element, point.element);
   point.unrender();
 };
 
-pointEdit.onSubmit = () => {
-  point.render();
+pointEdit.onSubmit = (newData) => {
+  data._type = newData.type;
+  data._type = newData.type;
+  data._time = newData.time;
+  data._price = newData.price;
+  data._offers = newData.offers;
+  data._city = newData.city;
+  data._isFavorit = newData.isFavorit;
+  data._desc = newData.desc;
+  data._imgies = newData.imgies;
+
+  point.update(newData);
+  point.render(tripDayConteiner);
   tripDayConteiner.replaceChild(point.element, pointEdit.element);
   pointEdit.unrender();
 };
