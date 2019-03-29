@@ -1,44 +1,44 @@
 import Point from './point';
 import PointEdit from './point-edit';
-import makeData from './info';
 
-const makePoint = (container) => {
-  const data = makeData();
-  const point = new Point(data);
-  const pointEdit = new PointEdit(data);
-
-  container.appendChild(pointEdit.render(container));
-
-  point.onEdit = () => {
-    pointEdit.render(container);
-    container.replaceChild(pointEdit.element, point.element);
-    point.unrender();
-  };
-
-  pointEdit.onSubmit = (newData) => {
-    data._type = newData.type;
-    data._type = newData.type;
-    data._time = newData.time;
-    data._price = newData.price;
-    data._offers = newData.offers;
-    data._city = newData.city;
-    data._isFavorit = newData.isFavorit;
-    data._desc = newData.desc;
-    data._imgies = newData.imgies;
-
-    point.update(newData);
-    point.render(container);
-    container.replaceChild(point.element, pointEdit.element);
-    pointEdit.unrender();
-  };
+const updatePoint = (points, pointToUpdate, newData) => {
+  const index = points.indexOf(pointToUpdate);
+  points[index] = Object.assign({}, points[index], newData);
+  return points[index];
 };
 
-export default (container, length = false) => {
-  if (!length) {
-    makePoint(container);
-  } else {
-    for (let i = 0; i < length; i++) {
-      makePoint(container);
-    }
+const removePoint = (points, pointToDelete) => {
+  const index = points.indexOf(pointToDelete);
+  points.splice(index, 1);
+};
+
+export default (container, points) => {
+  container.innerHTML = ``;
+  for (let point of points) {
+    const pointComponent = new Point(point);
+    const pointEditComponent = new PointEdit(point);
+
+    container.appendChild(pointComponent.render(container));
+
+    pointComponent.onEdit = () => {
+      pointEditComponent.render(container);
+      container.replaceChild(pointEditComponent.element, pointComponent.element);
+      pointComponent.unrender();
+    };
+
+    pointEditComponent.onSubmit = (newData) => {
+      const updatedPoint = updatePoint(points, point, newData);
+
+      pointComponent.update(updatedPoint);
+      pointComponent.render(container);
+      container.replaceChild(pointComponent.element, pointEditComponent.element);
+      pointEditComponent.unrender();
+    };
+
+    pointEditComponent.onDelete = () => {
+      removePoint(points, point);
+      container.removeChild(pointEditComponent.element);
+      pointEditComponent.unrender();
+    };
   }
 };

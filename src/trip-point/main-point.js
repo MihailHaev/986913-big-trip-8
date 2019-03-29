@@ -11,17 +11,17 @@ class MainPoint extends Component {
   }
 
   _getTimeTable() {
-    const durationObj = moment.duration(this._time.timeOfEnd - this._time.timeOfStart);
+    const durationObj = moment.duration(this._timeOfEnd - this._timeOfStart);
     if (durationObj.minutes() === 0 && durationObj.hours() === 0) {
-      return this._getHoursAndMinutes(this._time.timeOfStart);
+      return this._getHoursAndMinutes(this._timeOfStart);
     } else {
-      return `${this._getHoursAndMinutes(this._time.timeOfStart)}&nbsp;&mdash; ${this._getHoursAndMinutes(this._time.timeOfEnd)}`;
+      return `${this._getHoursAndMinutes(this._timeOfStart)}&nbsp;&mdash; ${this._getHoursAndMinutes(this._timeOfEnd)}`;
     }
 
   }
 
   _getDuration() {
-    const durationObj = moment.duration(this._time.timeOfEnd - this._time.timeOfStart);
+    const durationObj = moment.duration(this._timeOfEnd - this._timeOfStart);
     if (durationObj.minutes() === 0 && durationObj.hours() === 0) {
       return ``;
     } else {

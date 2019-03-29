@@ -15,25 +15,25 @@ const arrayOfDesc = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 const offers = {'Add luggage': getRandomInt(10, 40), 'Switch to comfort class': getRandomInt(10, 40), 'Add meal': getRandomInt(10, 40), 'Choose seats': getRandomInt(10, 40)};
 const cities = new Set([`Moscow`, `Amsterdam`, `Geneva`, `Chamonix`, `Aldento`, `Paris`, `London`, `Milan`]);
 
-export default () => {
-  const time = getRandomDate((4 / 24), (1 / 24));
-  const duration = getRandomInt((1000 * 60), (1000 * 60 * 60 * 3));
-  const timeOfEnd = time + duration;
-  const allTime = {
-    timeOfStart: new Date(time),
-    timeOfEnd: new Date(timeOfEnd),
-  };
-  return {
-    type: getRandomElementOfArray(types),
-    city: getRandomElementOfSet(cities),
-    desc: `${getRandomElementOfArray(arrayOfDesc, getRandomInt(1, 3)).join(`. `)}.`,
-    time: allTime,
-    imgies: [`http://picsum.photos/300/150?r=${Math.random()}`, `http://picsum.photos/300/150?r=${Math.random()}`, `http://picsum.photos/300/150?r=${Math.random()}`, `http://picsum.photos/300/150?r=${Math.random()}`],
-    price: getRandomInt(10, 100),
-    offers: getRandomElementOfObject(offers, getRandomInt(0, 2)),
-    isFavorit: getRandomBoolean(),
-    types,
-    allOffers: offers,
-    cities,
-  };
+export default (length = 1) => {
+  const array = [];
+  for (let i = 0; i < length; i++) {
+    const timeOfStart = getRandomDate((4 / 24), (1 / 24));
+    const duration = getRandomInt((1000 * 60), (1000 * 60 * 60 * 3));
+    const timeOfEnd = new Date(timeOfStart + duration);
+    array.push({type: getRandomElementOfArray(types),
+      city: getRandomElementOfSet(cities),
+      desc: `${getRandomElementOfArray(arrayOfDesc, getRandomInt(1, 3)).join(`. `)}.`,
+      timeOfStart,
+      timeOfEnd,
+      imgies: [`http://picsum.photos/300/150?r=${Math.random()}`, `http://picsum.photos/300/150?r=${Math.random()}`, `http://picsum.photos/300/150?r=${Math.random()}`, `http://picsum.photos/300/150?r=${Math.random()}`],
+      price: getRandomInt(10, 100),
+      offers: getRandomElementOfObject(offers, getRandomInt(0, 2)),
+      isFavorit: getRandomBoolean(),
+      types,
+      allOffers: offers,
+      cities,
+    });
+  }
+  return array;
 };
