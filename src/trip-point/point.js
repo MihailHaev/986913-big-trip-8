@@ -1,18 +1,24 @@
 import makeTripOffer from './offers';
 import MainPoint from './main-point';
 class Point extends MainPoint {
-  constructor({type, time, price, offers, city}) {
+  constructor(data) {
     super();
-    this._type = type;
-    this._time = time;
-    this._price = price;
-    this._offers = offers;
-    this._city = city;
+    this._type = data.type;
+    this._timeOfStart = data.timeOfStart;
+    this._timeOfEnd = data.timeOfEnd;
+    this._price = data.price;
+    this._offers = data.offers;
+    this._city = data.city;
+
+    this._onButtonClick = this._onButtonClick.bind(this);
+
     this._onEdit = null;
   }
 
   _onButtonClick() {
-    this._onEdit();
+    if (typeof this._onEdit === `function`) {
+      this._onEdit();
+    }
   }
 
   set onEdit(fn) {
@@ -43,16 +49,17 @@ class Point extends MainPoint {
   }
 
   bind() {
-    this._element.addEventListener(`click`, this._onButtonClick.bind(this));
+    this._element.addEventListener(`click`, this._onButtonClick);
   }
 
   unbind() {
-    this._element.removeEventListener(`click`, this._onButtonClick.bind(this));
+    this._element.removeEventListener(`click`, this._onButtonClick);
   }
 
   update(newData) {
     this._type = newData.type;
-    this._time = newData.time;
+    this._timeOfStart = newData.timeOfStart;
+    this._timeOfEnd = newData.timeOfEnd;
     this._price = newData.price;
     this._offers = newData.offers;
     this._city = newData.city;

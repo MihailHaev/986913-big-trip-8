@@ -7,23 +7,24 @@ import flatpickr from "flatpickr";
 import moment from 'moment';
 
 class PointEdit extends MainPoint {
-  constructor({type, time, price, offers, types, allOffers, cities, city, isFavorit, desc, imgies}) {
+  constructor(data) {
     super();
-    this._type = type;
-    this._time = time;
-    this._price = price;
-    this._offers = offers;
-    this._city = city;
-    this._isFavorit = isFavorit;
-    this._desc = desc;
-    this._imgies = imgies;
+    this._type = data.type;
+    this._timeOfStart = data.timeOfStart;
+    this._timeOfEnd = data.timeOfEnd;
+    this._price = data.price;
+    this._offers = data.offers;
+    this._city = data.city;
+    this._isFavorit = data.isFavorit;
+    this._desc = data.desc;
+    this._imgies = data.imgies;
 
-    this._types = types;
-    this._allOffers = allOffers;
-    this._cities = cities;
+    this._types = data.types;
+    this._allOffers = data.allOffers;
+    this._cities = data.cities;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-    this._onReset = this._onReset.bind(this);
+    this._onResetButtonClick = this._onResetButtonClick.bind(this);
     this._onChangeFavorit = this._onChangeFavorit.bind(this);
     this._onChangeOffer = this._onChangeOffer.bind(this);
     this._onChangePrice = this._onChangePrice.bind(this);
@@ -31,8 +32,9 @@ class PointEdit extends MainPoint {
     this._onChangeType = this._onChangeType.bind(this);
 
     this._onSubmit = null;
+    this._onDelete = null;
 
-    this._getHoursAndMinutes(this._time.timeOfStart);
+    this._getHoursAndMinutes(this._timeOfStart);
   }
 
   _onChangeType(evt) {
@@ -51,9 +53,9 @@ class PointEdit extends MainPoint {
   _onChangeTime(evt) {
     const [timeOfStart, timeOfEnd] = evt.target.value.split(` — `);
     let [hour, minute] = timeOfStart.split(`:`);
-    this._time.timeOfStart = moment(this._time.timeOfStart).set({hour, minute}).toDate();
+    this._timeOfStart = moment(this._timeOfStart).set({hour, minute}).toDate();
     [hour, minute] = timeOfEnd.split(`:`);
-    this._time.timeOfEnd = moment(this._time.timeOfEnd).set({hour, minute}).toDate();
+    this._timeOfEnd = moment(this._timeOfEnd).set({hour, minute}).toDate();
   }
 
   _onChangePrice(evt) {
@@ -83,13 +85,19 @@ class PointEdit extends MainPoint {
     }
   }
 
-  _onReset() {}
+  _onResetButtonClick(evt) {
+    evt.preventDefault();
+    if (typeof this._onDelete === `function`) {
+      this._onDelete();
+    }
+  }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
     const newData = {};
     newData.type = this._type;
-    newData.time = this._time;
+    newData.timeOfStart = this._timeOfStart;
+    newData.timeOfEnd = this._timeOfEnd;
     newData.price = this._price;
     newData.offers = this._offers;
     newData.city = this._city;
@@ -102,6 +110,16 @@ class PointEdit extends MainPoint {
   set onSubmit(fn) {
     if (typeof fn === `function`) {
       this._onSubmit = fn;
+    } else {
+      throw new Error(`on Submit is not a function`);
+    }
+  }
+
+  set onDelete(fn) {
+    if (typeof fn === `function`) {
+      this._onDelete = fn;
+    } else {
+      throw new Error(`on Delete is not a function`);
     }
   }
 
@@ -161,7 +179,7 @@ class PointEdit extends MainPoint {
 
   bind() {
     this._element.querySelector(`article > form`).addEventListener(`submit`, this._onSubmitButtonClick);
-    this._element.querySelector(`article > form`).addEventListener(`reset`, this._onReset);
+    this._element.querySelector(`article > form`).addEventListener(`reset`, this._onResetButtonClick);
     this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType);
     this._element.querySelector(`input[name="time"]`).addEventListener(`change`, this._onChangeTime);
     this._element.querySelector(`input[name="price"]`).addEventListener(`change`, this._onChangePrice);
@@ -171,15 +189,15 @@ class PointEdit extends MainPoint {
       mode: `range`, noCalendar: true,
       altInput: true, altFormat: `H:i`,
       dateFormat: `H:i`, defaultDate: [
-        moment(this._time.timeOfStart).format(`H:mm`),
-        moment(this._time.timeOfEnd).format(`H:mm`)],
+        moment(this._timeOfStart).format(`H:mm`),
+        moment(this._timeOfEnd).format(`H:mm`)],
       locale: {rangeSeparator: ` — `}
     });
   }
 
   unbind() {
     this._element.querySelector(`article > form`).removeEventListener(`submit`, this._onSubmitButtonClick);
-    this._element.querySelector(`article > form`).removeEventListener(`reset`, this._onReset);
+    this._element.querySelector(`article > form`).removeEventListener(`reset`, this._onResetButtonClick);
     this._element.querySelector(`.travel-way__select`).removeEventListener(`change`, this._onChangeType);
     this._element.querySelector(`input[name="time"]`).removeEventListener(`change`, this._onChangeTime);
     this._element.querySelector(`input[name="price"]`).removeEventListener(`change`, this._onChangePrice);
@@ -189,7 +207,8 @@ class PointEdit extends MainPoint {
 
   update(newDate) {
     this._type = newDate.type;
-    this._time = newDate.time;
+    this._timeOfStart = newDate.timeOfStart;
+    this._timeOfEnd = newDate.timeOfStart;
     this._price = newDate.price;
     this._offers = newDate.offers;
     this._city = newDate.city;

@@ -1,23 +1,22 @@
-import makeFilter from './filter';
 import makeTripPoints from './trip-point/points';
-import {getRandomInt} from './random-values';
+import makeData from './trip-point/data';
+import makeFilters from './filter/filters';
+import openStats from './openStats';
+import openTable from './openTable';
 
+const intalisionPoints = makeData(7);
 const filterConteiner = document.querySelector(`.trip-filter`);
 const tripDayConteiner = document.querySelector(`.trip-day__items`);
+const filtersNames = [`everything`, `future`, `past`];
+const tableButton = document.querySelector(`a[href="#table"]`);
+const statsButton = document.querySelector(`a[href="#stats"]`);
 
-makeTripPoints(tripDayConteiner, 7);
+makeTripPoints(tripDayConteiner, intalisionPoints);
+makeFilters(filterConteiner, filtersNames, intalisionPoints, tripDayConteiner);
 
-const doFilter = () => {
-  tripDayConteiner.innerHTML = ``;
-  tripDayConteiner.insertAdjacentHTML(`beforeend`, makeTripPoints(getRandomInt(0, 7)));
-};
+tableButton.addEventListener(`click`, openTable);
+statsButton.addEventListener(`click`, (evt) => {
+  openStats(evt, intalisionPoints);
+});
 
-const arrayOfHTMLFilters = [makeFilter(`everything`, true),
-  makeFilter(`future`),
-  makeFilter(`past`)];
 
-filterConteiner.insertAdjacentHTML(`beforeend`, arrayOfHTMLFilters.join(``));
-
-const arrayOfFilters = document.querySelectorAll(`.trip-filter__item`);
-
-arrayOfFilters.forEach((el) => el.addEventListener(`click`, doFilter));
