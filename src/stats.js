@@ -1,13 +1,12 @@
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import createElement from './element';
 
 let itHaveChart = false;
 
 const reloadCanvas = (ctx, addedClass) => {
   ctx.remove();
-  const wrapper = document.createElement(`div`);
-  wrapper.innerHTML = `<canvas class="statistic__${addedClass}" width="900"></canvas>`;
-  ctx = wrapper.firstChild;
+  ctx = createElement(`<canvas class="statistic__${addedClass}" width="900"></canvas>`);
   return ctx;
 };
 

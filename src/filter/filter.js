@@ -25,15 +25,7 @@ class Filter extends Component {
   }
 
   get template() {
-    return `<span><input
-    type="radio"
-    id="filter-${this._text}"
-    name="filter"
-    value="${this._text}"
-    ${this._isChecked ? `checked` : ``}>
-  <label
-    class="trip-filter__item"
-    for="filter-${this._text}">${this._text}</label></span>`;
+    return `<input type="radio" id="filter-${this._text}" name="filter" value="${this._text}" ${this._isChecked ? `checked` : ``}><label class="trip-filter__item" for="filter-${this._text}">${this._text}</label>`.trim();
   }
 
   bind() {

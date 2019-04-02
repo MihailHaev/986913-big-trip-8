@@ -1,8 +1,8 @@
 import makeTripPoints from './trip-point/points';
 import makeData from './trip-point/data';
 import makeFilters from './filter/filters';
-import openStats from './openStats';
-import openTable from './openTable';
+import openStats from './stats';
+import openTable from './table';
 
 const intalisionPoints = makeData(7);
 const filterConteiner = document.querySelector(`.trip-filter`);

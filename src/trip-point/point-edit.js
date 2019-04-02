@@ -1,5 +1,4 @@
 import makeTravelWays from './travel-ways';
-import makeOffers from './offers-edit';
 import makeDestination from './destination';
 import makeImgies from './imgies';
 import MainPoint from './main-point';
@@ -35,6 +34,37 @@ class PointEdit extends MainPoint {
     this._onDelete = null;
 
     this._getHoursAndMinutes(this._timeOfStart);
+  }
+
+  _makeTime() {
+    const time = this._getTimeTable();
+    if (time.length > 6) {
+      const [dateStart, dateEnd] = time.split(`&nbsp;&mdash; `);
+      return `<input class="point__input" type="text" value="${dateStart}" name="date-start" placeholder="19:00">
+      <input class="point__input" type="text" value="${dateEnd}" name="date-end" placeholder="21:00">`;
+    } else {
+      return `<input class="point__input" type="text" value="${time}" name="date-start" placeholder="19:00">`;
+    }
+  }
+
+  _makeOffers(objOfOffers, offers) {
+    const allOffers = [];
+    for (let key in objOfOffers) {
+      if (objOfOffers.hasOwnProperty(key)) {
+        let doCheck = false;
+        if (offers[key]) {
+          doCheck = true;
+        }
+        const classText = key.split(` `).join(`-`);
+        allOffers.push(`<input class="point__offers-input visually-hidden" type="checkbox" id="${classText}" name="offer" value="${classText}" ${doCheck ? `checked` : ``}>
+          <label for="${classText}" class="point__offers-label">
+            <span class="point__offer-service">${key}</span> + €<span class="point__offer-price">${objOfOffers[key]}</span>
+          </label>`);
+      }
+    }
+    return `<div class="point__offers-wrap">
+        ${allOffers.join(``)}
+      </div>`.trim();
   }
 
   _onChangeType(evt) {
@@ -141,7 +171,7 @@ class PointEdit extends MainPoint {
   
         <label class="point__time">
           choose time
-          <input class="point__input" type="text" value="${this._getTimeTable()}" name="time" placeholder="00:00 — 00:00">
+          ${this._makeTime()}
         </label>
   
         <label class="point__price">
@@ -164,7 +194,7 @@ class PointEdit extends MainPoint {
       <section class="point__details">
         <section class="point__offers">
           <h3 class="point__details-title">offers</h3>
-          ${makeOffers(this._allOffers, this._offers)}
+          ${this._makeOffers(this._allOffers, this._offers)}
         </section>
         <section class="point__destination">
           <h3 class="point__details-title">Destination</h3>
@@ -181,17 +211,20 @@ class PointEdit extends MainPoint {
     this._element.querySelector(`article > form`).addEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`article > form`).addEventListener(`reset`, this._onResetButtonClick);
     this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType);
-    this._element.querySelector(`input[name="time"]`).addEventListener(`change`, this._onChangeTime);
+    this._element.querySelector(`input[name="date-start"]`).addEventListener(`change`, this._onChangeTime);
+    if (this._timeOfStart !== this._timeOfEnd) {
+      this._element.querySelector(`input[name="date-end"]`).addEventListener(`change`, this._onChangeTime);
+    }
     this._element.querySelector(`input[name="price"]`).addEventListener(`change`, this._onChangePrice);
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`change`, this._onChangeOffer);
     this._element.querySelector(`.paint__favorite-wrap`).addEventListener(`change`, this._onChangeFavorit);
-    flatpickr(`input[name="time"]`, {enableTime: true,
-      mode: `range`, noCalendar: true,
+    flatpickr(`input[name="date-start"]`, {enableTime: true,
       altInput: true, altFormat: `H:i`,
-      dateFormat: `H:i`, defaultDate: [
-        moment(this._timeOfStart).format(`H:mm`),
-        moment(this._timeOfEnd).format(`H:mm`)],
-      locale: {rangeSeparator: ` — `}
+      dateFormat: `H:i`, defaultDate: moment(this._timeOfStart).format(`H:mm`)
+    });
+    flatpickr(`input[name="date-end"]`, {enableTime: true,
+      altInput: true, altFormat: `H:i`,
+      dateFormat: `H:i`, defaultDate: moment(this._timeOfEnd).format(`H:mm`)
     });
   }
 
@@ -199,7 +232,10 @@ class PointEdit extends MainPoint {
     this._element.querySelector(`article > form`).removeEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`article > form`).removeEventListener(`reset`, this._onResetButtonClick);
     this._element.querySelector(`.travel-way__select`).removeEventListener(`change`, this._onChangeType);
-    this._element.querySelector(`input[name="time"]`).removeEventListener(`change`, this._onChangeTime);
+    this._element.querySelector(`input[name="date-start"]`).removeEventListener(`change`, this._onChangeTime);
+    if (this._timeOfStart !== this._timeOfEnd) {
+      this._element.querySelector(`input[name="date-end"]`).removeEventListener(`change`, this._onChangeTime);
+    }
     this._element.querySelector(`input[name="price"]`).removeEventListener(`change`, this._onChangePrice);
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`change`, this._onChangeOffer);
     this._element.querySelector(`.paint__favorite-wrap`).removeEventListener(`change`, this._onChangeFavorit);

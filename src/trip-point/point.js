@@ -1,4 +1,3 @@
-import makeTripOffer from './offers';
 import MainPoint from './main-point';
 class Point extends MainPoint {
   constructor(data) {
@@ -13,6 +12,23 @@ class Point extends MainPoint {
     this._onButtonClick = this._onButtonClick.bind(this);
 
     this._onEdit = null;
+  }
+
+  _makeTripOffer(offers) {
+    const arrayOfOffers = [];
+
+    for (let offer in offers) {
+      if (offers.hasOwnProperty(offer)) {
+        arrayOfOffers.push(`
+      <li>
+      <button class="trip-point__offer">${offer} +&euro;&nbsp;${offers[offer]}</button>
+      </li>`);
+      }
+    }
+
+    return `<ul class="trip-point__offers">
+    ${arrayOfOffers.join(``)}
+    </ul>`;
   }
 
   _onButtonClick() {
@@ -44,7 +60,7 @@ class Point extends MainPoint {
       <span class="trip-point__duration">${this._getDuration()}</span>
     </p>
     <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
-    ${makeTripOffer(this._offers)}
+    ${this._makeTripOffer(this._offers)}
     </article>`.trim();
   }
 
