@@ -205,4 +205,5 @@ export default (evt, initialPoints) => {
     }
   });
   itHaveChart = true;
+  return [moneyChart, transportChart];
 };
