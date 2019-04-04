@@ -4,6 +4,17 @@ import moment from 'moment';
 class MainPoint extends Component {
   constructor() {
     super();
+
+    this._types = [{icon: `🏨`, name: `Hotel`, transport: false},
+      {icon: `🚗`, name: `Drive`, transport: true},
+      {icon: `🚌`, name: `Bus`, transport: true},
+      {icon: `🚂`, name: `Train`, transport: true},
+      {icon: `🛳️`, name: `Ship`, transport: true},
+      {icon: `🚊`, name: `Transport`, transport: true},
+      {icon: `🏛️`, name: `Sightseeing`, transport: false},
+      {icon: `🍴`, name: `Restaurant`, transport: false},
+      {icon: `🚕`, name: `Taxi`, transport: true},
+      {icon: `✈️`, name: `Flight`, transport: true}];
   }
 
   _getHoursAndMinutes(time) {

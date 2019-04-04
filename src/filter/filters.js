@@ -1,5 +1,5 @@
 import Filter from './filter';
-import makePoints from '../trip-point/points';
+import openStats from './stats';
 
 const filterPoints = (filterId, initialData) => {
   switch (filterId) {
@@ -14,7 +14,8 @@ const filterPoints = (filterId, initialData) => {
   }
 };
 
-export default (container, names, intalisionPoints, pointsContainer) => {
+export default (names, getFull, api) => {
+  const container = document.querySelector(`.trip-filter`);
   container.innerHTML = ``;
   for (let filterName of names) {
     const filterComponent = new Filter(filterName, names.indexOf(filterName) === 0);
@@ -22,8 +23,18 @@ export default (container, names, intalisionPoints, pointsContainer) => {
     container.appendChild(filterComponent.render(container));
     filterComponent.onFilter = (evt) => {
       const choosenFilterId = evt.target.id;
-      const choosenPoints = filterPoints(choosenFilterId, intalisionPoints);
-      makePoints(pointsContainer, choosenPoints);
+
+      if (document.querySelector(`.statistic`).classList.contains(`visually-hidden`)) {
+        getFull(filterPoints, choosenFilterId);
+      } else {
+        api.getPoints()
+          .then((points) => {
+            points = filterPoints(choosenFilterId, points);
+            openStats(evt, points);
+          });
+      }
+      // const choosenPoints = filterPoints(choosenFilterId, intalisionPoints);
+      // makePoints(pointsContainer, choosenPoints);
     };
   }
 };

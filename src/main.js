@@ -1,22 +1,53 @@
-import makeTripPoints from './trip-point/points';
-import makeData from './trip-point/data';
+import makePoints from './trip-point/points';
 import makeFilters from './filter/filters';
-import openStats from './openStats';
-import openTable from './openTable';
+import openStats from './stats';
+import openTable from './table';
+import API from './trip-point/api';
 
-const intalisionPoints = makeData(7);
-const filterConteiner = document.querySelector(`.trip-filter`);
-const tripDayConteiner = document.querySelector(`.trip-day__items`);
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip/`;
+
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+
 const filtersNames = [`everything`, `future`, `past`];
 const tableButton = document.querySelector(`a[href="#table"]`);
 const statsButton = document.querySelector(`a[href="#stats"]`);
 
-makeTripPoints(tripDayConteiner, intalisionPoints);
-makeFilters(filterConteiner, filtersNames, intalisionPoints, tripDayConteiner);
+const getFull = (filter, filterId) => {
+  const tripDayConteiner = document.querySelector(`.trip-day__items`);
+  tripDayConteiner.innerHTML = `Loading route...`;
+  let allPoints;
+  let allOffers;
+  api.getPoints()
+    .then((points) => {
+      if (filter) {
+        allPoints = filter(filterId, points);
+      } else {
+        allPoints = points;
+      }
+      api.getOffers()
+        .then((offers) => {
+          allOffers = offers;
+          api.getDestinations()
+            .then((destinations) => {
+              makePoints(destinations, allPoints, allOffers, api);
+            })
+            .catch(() => {
+              tripDayConteiner.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later`;
+            });
+        });
+    });
+};
+
+getFull();
+makeFilters(filtersNames, getFull, api);
 
 tableButton.addEventListener(`click`, openTable);
 statsButton.addEventListener(`click`, (evt) => {
-  openStats(evt, intalisionPoints);
+  api.getPoints()
+  .then((points) => {
+    openStats(evt, points);
+  });
 });
 
 
